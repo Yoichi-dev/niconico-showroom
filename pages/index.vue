@@ -3,6 +3,12 @@
     <v-container class="nonecss" id="userData">
       <div class="py-6"></div>
       <v-row justify="center" align="center">
+        <small
+          >※配信、テストが終わった際はタブを閉じるかページをリロードしてください※</small
+        >
+      </v-row>
+      <div class="py-1"></div>
+      <v-row justify="center" align="center">
         <v-btn outlined color="indigo" @click="getRoomData()" :disabled="btn">
           自分のルームへ接続
         </v-btn>
@@ -348,7 +354,7 @@ export default {
           .then((response) => {
             console.log(response.statusText)
           })
-      }, 600000)
+      }, 1200000)
     },
     connectSocket() {
       console.log('接続開始')
