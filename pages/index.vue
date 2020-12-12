@@ -3,9 +3,9 @@
     <v-container class="nonecss" id="userData">
       <div class="py-6"></div>
       <v-row justify="center" align="center">
-        <small
-          >※配信、テストが終わった際はタブを閉じるかページをリロードしてください※</small
-        >
+        <p>
+          ※配信、テストが終わった際はタブを閉じるかページをリロードしてください※
+        </p>
       </v-row>
       <div class="py-1"></div>
       <v-row justify="center" align="center">
@@ -28,6 +28,27 @@
           color="green"
           indeterminate
         ></v-progress-circular>
+      </v-row>
+      <div class="py-6"></div>
+      <v-row justify="center" align="center">
+        <v-simple-table>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left">News</th>
+                <th class="text-left"></th>
+                <th class="text-left"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(news, i) in newsLists" :key="i">
+                <td>{{ news.title }}</td>
+                <td v-html="news.content"></td>
+                <td>{{ news.date }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
       </v-row>
       <v-row justify="center">
         <v-dialog v-model="commentDialog" scrollable max-width="500px">
@@ -199,6 +220,32 @@ export default {
       stockPreGifts: [],
       top: 0,
       fontFamily: '',
+      newsLists: [
+        {
+          title: 'Bugfix',
+          content:
+            '配信に一定期間接続していない状態で接続すると接続に失敗する問題を修正<br>　使用前に「Ctrl + F5」を押してください（初回だけでOK）',
+          date: '2020/12/12 21:30',
+        },
+        {
+          title: 'Release',
+          content:
+            'リアルLINE風コメントビューワー（β版）　<a href="https://showroom-comment-viewer.yoichi.dev/" target="_blank">https://showroom-comment-viewer.yoichi.dev/</a>',
+          date: '2020/12/10 11:00',
+        },
+        {
+          title: 'Release',
+          content:
+            '雪降らすだけのサイト　<a href="https://particles-screen.yoichi.dev/" target="_blank">https://particles-screen.yoichi.dev/</a>',
+          date: '2020/12/02 07:30',
+        },
+        {
+          title: 'Release',
+          content:
+            'スコアニのフォント変更拡張機能　<a href="https://chrome.google.com/webstore/detail/showroom-%E3%81%99%E3%81%93%E3%82%A2%E3%83%8B-%E4%BB%AE-%CE%B2%E7%89%88%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4%E6%A9%9F/nmknohiegmphpeadmmpkfdhddedfbool" target="_blank">Chrome版</a>　<a href="https://addons.mozilla.org/ja/firefox/addon/showroom-%E3%81%99%E3%81%93%E3%82%A2%E3%83%8B-%E4%BB%AE-%CE%B2%E7%89%88%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4-%E6%A9%9F%E8%83%BD%E5%88%B6%E9%99%90%E7%89%88/" target="_blank">Firefox版</a>',
+          date: '2020/07/14 11:00',
+        },
+      ],
     }
   },
   head() {
@@ -231,52 +278,16 @@ export default {
   },
   // 離脱時
   beforeRouteLeave(to, from, next) {
-    this.socket.close()
+    if (this.socket != null) {
+      this.socket.close()
+    }
     this.$nuxt.$emit('openMenu', true)
     next()
   },
   created() {
     this.setListener()
   },
-  mounted() {
-    // 接続
-    this.socket = new WebSocket('wss://online.showroom-live.com')
-    // 接続確認
-    this.socket.onopen = (e) => {
-      console.log('コネクションを開始しました')
-    }
-    // エラー発生時
-    this.socket.onerror = (error) => {
-      alert('エラーが発生しました\nページをリロードしてください')
-      location.reload()
-    }
-    // メッセージ受信
-    this.socket.onmessage = (data) => {
-      // 死活監視
-      if (data.data === 'ACK	showroom') {
-        console.log('死活監視OK')
-        return
-      }
-      // JSON変換
-      let getMessage = JSON.parse(
-        data.data.replace('MSG	' + this.roomData.bcsvr_key + '	', '')
-      )
-      // コメント
-      if (getMessage.cm != undefined) {
-        // カウント
-        if (Number.isFinite(Number(getMessage.cm)) && getMessage.cm <= 50) {
-          this.getCount(getMessage)
-        } else {
-          this.commentLog(getMessage)
-          this.getComment(getMessage)
-        }
-      }
-      // ギフト
-      if (getMessage.g != undefined) {
-        this.giftLog(getMessage)
-      }
-    }
-  },
+  mounted() {},
   methods: {
     setListener() {
       this.$nuxt.$on('commentModalOpen', this.commentModalOpen)
@@ -304,7 +315,6 @@ export default {
             this.loading = false
             return
           }
-          // console.log(response.data)
           this.roomData = response.data
           if (response.data.bcsvr_key != '') {
             this.setting()
@@ -350,7 +360,10 @@ export default {
       }, 60000)
       setInterval(() => {
         axios
-          .get('https://niconico-showroom-api.herokuapp.com/apis/alive')
+          .get(
+            'https://niconico-showroom-api.herokuapp.com/apis/alive/' +
+              this.roomData.roomId
+          )
           .then((response) => {
             console.log(response.statusText)
           })
@@ -358,8 +371,45 @@ export default {
     },
     connectSocket() {
       console.log('接続開始')
-      this.socket.send('SUB	' + this.roomData.bcsvr_key)
-      document.getElementById('userData').style.display = 'none'
+      // 接続
+      this.socket = new WebSocket('wss://online.showroom-live.com')
+      // 接続確認
+      this.socket.onopen = (e) => {
+        console.log('コネクションを開始しました')
+        this.socket.send('SUB	' + this.roomData.bcsvr_key)
+        document.getElementById('userData').style.display = 'none'
+      }
+      // エラー発生時
+      this.socket.onerror = (error) => {
+        alert('エラーが発生しました\nページをリロードしてください')
+        location.reload()
+      }
+      // メッセージ受信
+      this.socket.onmessage = (data) => {
+        // 死活監視
+        if (data.data === 'ACK	showroom') {
+          console.log('死活監視OK')
+          return
+        }
+        // JSON変換
+        let getMessage = JSON.parse(
+          data.data.replace('MSG	' + this.roomData.bcsvr_key + '	', '')
+        )
+        // コメント
+        if (getMessage.cm != undefined) {
+          // カウント
+          if (Number.isFinite(Number(getMessage.cm)) && getMessage.cm <= 50) {
+            this.getCount(getMessage)
+          } else {
+            this.commentLog(getMessage)
+            this.getComment(getMessage)
+          }
+        }
+        // ギフト
+        if (getMessage.g != undefined) {
+          this.giftLog(getMessage)
+        }
+      }
     },
     commentLog(data) {
       this.stockComments.push({
@@ -399,7 +449,6 @@ export default {
         document.documentElement.clientHeight - he * 2
       )
       while (this.top + 100 > nextTop && this.top - 100 < nextTop) {
-        console.log(nextTop)
         nextTop = this.getRandomNum(
           50,
           document.documentElement.clientHeight - he * 2
