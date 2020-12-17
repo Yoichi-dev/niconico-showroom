@@ -222,6 +222,12 @@ export default {
       fontFamily: '',
       newsLists: [
         {
+          title: 'Update',
+          content:
+            'すこアニフォント変更拡張機能 機能追加（フォントサイズ変更） <a href="https://chrome.google.com/webstore/detail/showroom-%E3%81%99%E3%81%93%E3%82%A2%E3%83%8B-%E4%BB%AE-%CE%B2%E7%89%88%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4%E6%A9%9F/nmknohiegmphpeadmmpkfdhddedfbool" target="_blank">Chrome版</a>',
+          date: '2020/12/15 15:00',
+        },
+        {
           title: 'Bugfix',
           content:
             '配信に一定期間接続していない状態で接続すると接続に失敗する問題を修正<br>　使用前に「Ctrl + F5」を押してください（初回だけでOK）',
