@@ -224,6 +224,12 @@ export default {
         {
           title: 'Update',
           content:
+            '本WebアプリケーションPWA対応（URLバー右に表示されるインストールを押すとPCにインストールして使用できます）',
+          date: '2020/12/19 19:00',
+        },
+        {
+          title: 'Update',
+          content:
             'すこアニフォント変更拡張機能 機能追加（フォントサイズ変更） <a href="https://chrome.google.com/webstore/detail/showroom-%E3%81%99%E3%81%93%E3%82%A2%E3%83%8B-%E4%BB%AE-%CE%B2%E7%89%88%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4%E6%A9%9F/nmknohiegmphpeadmmpkfdhddedfbool" target="_blank">Chrome版</a>',
           date: '2020/12/15 15:00',
         },
