@@ -3,7 +3,7 @@
     <v-container>
       <v-row justify="center" align="center">
         <v-col cols="12">
-          コメント読み上げ
+          コメント読み上げ（読み上げ精度は今の所いまいちなのであまりオススメはしません。あくまでもおまけ機能）
           <v-checkbox
             v-model="checkbox"
             :label="`読み上げ${checkbox ? 'する' : 'しない'}`"
