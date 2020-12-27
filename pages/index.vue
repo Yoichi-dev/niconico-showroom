@@ -370,16 +370,16 @@ export default {
           this.socket.send('PING	showroom')
         }
       }, 60000)
-      setInterval(() => {
-        axios
-          .get(
-            'https://niconico-showroom-api.herokuapp.com/apis/alive/' +
-              this.roomData.roomId
-          )
-          .then((response) => {
-            console.log(response.statusText)
-          })
-      }, 1200000)
+      // setInterval(() => {
+      //   axios
+      //     .get(
+      //       'https://niconico-showroom-api.herokuapp.com/apis/alive/' +
+      //         this.roomData.roomId
+      //     )
+      //     .then((response) => {
+      //       console.log(response.statusText)
+      //     })
+      // }, 1200000)
     },
     connectSocket() {
       console.log('接続開始')
