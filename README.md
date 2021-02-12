@@ -1,21 +1,24 @@
 # ニコニコSHOWROOM
 
-SHOWROOMのコメントをニコニコ動画風に流せる配信ツール
+[SHOWROOM](https://www.showroom-live.com/)のコメントをニコニコ動画風に流せる配信ツール
 
-## Build Setup
+# DEMO
+
+[https://niconico-showroom.yoichi.dev/](https://niconico-showroom.yoichi.dev/)
+
+# Usage
 
 ```bash
-# install dependencies
+$ git clone https://github.com/Yoichi-dev/niconico-showroom.git
+$ cd niconico-showroom
 $ npm install
-
-# serve with hot reload at localhost:3000
 $ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
 ```
 
+# Author
+
+* よーいちろー [@TYoichiro](https://twitter.com/TYoichiro)
+
+# License
+
+[MIT license](https://en.wikipedia.org/wiki/MIT_License).
